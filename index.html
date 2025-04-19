@@ -411,7 +411,13 @@
         // Supabase initialization
         const SUPABASE_URL = 'https://oazrqlhcbwbwukvawhlw.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9henJxbGhjYndid3VrdmF3aGx3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwOTQ5MzYsImV4cCI6MjA2MDY3MDkzNn0.MGD0fXHgjSX_iKOPNjvmFnNsvToagOVUMfknqKOvQAI';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Modify your Supabase initialization
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  headers: {
+    'apikey': SUPABASE_KEY,
+    'Content-Type': 'application/json'
+  }
+});
         
         // DOM Elements
         const authModal = document.getElementById('authModal');
