@@ -791,20 +791,25 @@
                 }
                 
                 // Check if request already exists
-                const { data: existingRequest, error: requestError } = await supabase
-                    .from('friends')
-                    .select('*')
-                    .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${user.id}),and(sender_id.eq.${user.id},receiver_id.eq.${currentUser.id})`)
-                    .single();
-                
-                if (existingRequest) {
-                    if (existingRequest.status === 'pending') {
-                        showNotification('Friend request already sent or received');
-                    } else if (existingRequest.status === 'accepted') {
-                        showNotification('You are already friends');
-                    }
-                    return;
-                }
+                // Replace the existing code with this:
+const { data: existingRequests, error: requestError } = await supabase
+    .from('friends')
+    .select('*')
+    .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${user.id}),and(sender_id.eq.${user.id},receiver_id.eq.${currentUser.id})`);
+
+if (requestError) throw requestError;
+
+// Check if any requests exist
+if (existingRequests && existingRequests.length > 0) {
+    const existingRequest = existingRequests[0]; // Take the first one if multiple exist
+    
+    if (existingRequest.status === 'pending') {
+        showNotification('Friend request already sent or received');
+    } else if (existingRequest.status === 'accepted') {
+        showNotification('You are already friends');
+    }
+    return;
+}
                 
                 // Send friend request
                 const { error } = await supabase.from('friends').insert({
